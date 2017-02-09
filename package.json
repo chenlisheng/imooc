@@ -1,11 +1,11 @@
 {
-  "name": "template",
+  "name": "imooc",
   "version": "0.1.0",
-  "description": "vue template",
+  "description": "imooc",
   "author": "chenlisheng <nield_chen@126.com>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --port 8090 --inline --hot",
+    "dev": "webpack-dev-server --port 8050 --inline --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "copy": "mkdirp deploy && ncp index.html deploy/index.html && ncp static deploy/static && ncp build deploy/build",
     "deploy": "npm run build && npm run copy",
