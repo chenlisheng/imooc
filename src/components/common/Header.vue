@@ -8,7 +8,11 @@
       <div class="nav-item">
         <ul>
           <li><a href="javascript:void(0)" class="item">课程</a></li>
-          <li><a href="javascript:void(0)" class="item">职业路径</a></li>
+          <li>
+            <a href="javascript:void(0)" class="item">职业路径
+              <i class="icn-new"></i>
+            </a>
+          </li>
           <li><a href="javascript:void(0)" class="item">实战</a></li>
           <li><a href="javascript:void(0)" class="item">猿问</a></li>
           <li><a href="javascript:void(0)" class="item">手记</a></li>
@@ -27,12 +31,12 @@
       </div>
       <div class="login-area" id="user-msg">
         <ul>
-          <li class="icon shop_car">
+          <li class="icon" data-nav="shop_car">
             <a href="javascript:void(0)" class="item">
               <i class="material-icons item">local_grocery_store</i>
               购物车
             </a>
-            <div class="shop_car_box">
+            <div class="shop_car_box showBox">
               <div class="shop_car_content">
                 <div class="top">
                   <span class="left">我的购物车</span>
@@ -58,7 +62,7 @@
               </div>
             </div>
           </li>
-          <li class="icon tip">
+          <li class="icon">
             <a href="javascript:void(0)" class="item" v-if="username==undefined">
               <span>登陆</span>
             </a>
@@ -66,13 +70,70 @@
               <i class="material-icons item">notifications</i>
             </a>
           </li>
-          <li class="user_box">
+          <li class="user_box icon" data-nav="user_center">
             <a href="javascript:void(0)" class="item" v-if="username==undefined">
               <span>注册</span>
             </a>
             <a href="javascript:void(0)" class="item" data-type="user_msg" v-else>
               <img />
             </a>
+            <div class="user_msg_box showBox" v-if="username!=undefined">
+              <div class="user_msg_content">
+                <div style="height:240px;border-bottom:1px solid #eee">
+                  <div class="top">
+                    <img/>
+                    <div class="text">
+                      <span>慕粉4346736</span>
+                      <div>
+                        <a href="javascript:void(0)">经验<span>5000</span></a>
+                        <a href="javascript:void(0)">积分<span>50</span></a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="middle">
+                    <ul>
+                      <li>
+                        <a href="javascript:void(0)">
+                          <i class="material-icons">book</i>
+                          我的课程
+                        </a>
+                      </li>
+                      <li>
+                        <a href="javascript:void(0)">
+                          <i class="material-icons">receipt</i>
+                          订单中心
+                        </a>
+                      </li>
+                      <li>
+                        <a href="javascript:void(0)">
+                          <i class="material-icons">store</i>
+                          积分商城
+                        </a>
+                      </li>
+                      <li>
+                        <a href="javascript:void(0)">
+                          <i class="material-icons">settings</i>
+                          个人设置
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="bottom">
+                    <div>
+                      <i class="material-icons">schedule</i>
+                      <span style="font-weight: bold;">JS动画效果</span>
+                    </div>
+                    <div style="margin-left: 20px;">
+                      <span style="color: #787d82;">jQuery动画案例</span>
+                      <a href="javascript:void(0)">继续</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="user_exit">
+                  <a href="javascript:void(0)">安全退出</a>
+                </div>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -91,10 +152,16 @@ export default {
         function(){
           $(this).find('i.item').addClass('active');
           $(this).find('a.item').css({color:"#fff",backgroundColor:'rgba(77,85,93,.4)'});
+          if($(this)[0].attributes['data-nav']){
+            $(this).find('div.showBox').show();
+          }
         },
         function(){
           $(this).find('i.item').removeClass('active');
           $(this).find('a.item').css({color:"#ff4081",backgroundColor:'#000'});
+          if($(this)[0].attributes['data-nav']){
+            $(this).find('div.showBox').hide();
+          }
         }
       );
     }
@@ -104,7 +171,7 @@ export default {
   },
   data() {
     return{
-      username: undefined
+      username: 'chenlisheng'
     }
   }
 }
@@ -135,11 +202,13 @@ ul{
   margin: 0;
   padding: 0;
 }
+a{
+  text-decoration: none;
+}
 li a.item{
   height: 60px;
   line-height: 60px;
   display: block;
-  text-decoration: none;
 }
 li a.item:hover{
   background-color:rgba(77,85,93,.4);
@@ -153,6 +222,15 @@ li a.item:hover{
 .nav-item li a.item{
   color: #fff;
   padding: 0 25px;
+}
+.nav-item li a.item .icn-new{
+  position: relative;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  top: -10px;
+  left: -5px;
+  background:url("../../../static/img/header/new.png") no-repeat;
 }
 .search-warp {
   float: left;
@@ -235,17 +313,20 @@ li a.item:hover{
   margin-top: -5px;
   border-radius: 50%;
   display: inline-block;
-  background: url("../../../static/img/header/menu_icon.png") no-repeat;
+  background: url("../../../static/img/header/user.jpg") no-repeat;
+  background-size: cover;
 }
 /*购物车弹框样式*/
+.header .nav .showBox {
+  display:none;
+}
 .header .nav .shop_car_box{
   width: 350px;
   height: 410px;
-  display: none;
   position: absolute;
   background-color: #fff;
-  margin-top: 3px;
   margin-left: -242px;
+  z-index: 9999;
 }
 .header .nav .shop_car_content{
   width: 330px;
@@ -326,6 +407,101 @@ li a.item:hover{
   text-decoration: none;
 }
 .header .nav .shop_car_content .bottom a:hover{
+  color: #f00;
+}
+/*用户信息弹框样式*/
+.header .nav .user_msg_box {
+  width: 310px;
+  height: 310px;
+  position: absolute;
+  background-color: #fff;
+  margin-left: -238px;
+  z-index: 9999;
+}
+.header .nav .user_msg_content {
+  width:280px;
+  height:280px;
+  margin:15px;
+}
+.header .nav .user_msg_content a {
+  font-size: 12px;
+  color: #787d82;
+}
+.header .nav .user_msg_content .top{
+  display: flex;
+  height: 90px;
+}
+.header .nav .user_msg_content .top img{
+  width: 70px;
+  height: 70px;
+  margin-top: 10px;
+}
+.header .nav .user_msg_content .top .text{
+  margin-left: 20px;
+  margin-top: 18px;
+}
+.header .nav .user_msg_content .top .text>span{
+  font-size: 16px;
+  display: block;
+  line-height: 30px;
+}
+.header .nav .user_msg_content .middle {
+  height: 90px;
+  width: 100%;
+}
+.header .nav .user_msg_content .middle ul{
+  width: 280px;
+  display: block;
+  height: 90px;
+}
+.header .nav .user_msg_content .middle li{
+  width: 130px;
+  height: 35px;
+  line-height: 35px;
+  margin: 5px 10px 5px 0;
+  background-color: #f3f5f7;
+  float: left;
+}
+.header .nav .user_msg_content .middle li:hover a{
+  color: #4d555d;
+  background-color: #d9dde1;
+}
+.header .nav .user_msg_content .middle li>a{
+  width: 120px;
+  height: 35px;
+  display: block;
+}
+.header .nav .user_msg_content .middle li i{
+  font-size: 16px;
+  vertical-align: text-top;
+  margin-left: 15px;
+}
+.header .nav .user_msg_content .bottom{
+  height: 60px;
+  width: 100%;
+  font-size: 12px;
+}
+.header .nav .user_msg_content .bottom i{
+  font-size: 16px;
+  vertical-align: text-top;
+}
+.header .nav .user_msg_content .bottom a{
+  display: block;
+  float: right;
+  color: #00b43c;
+}
+.header .nav .user_msg_content .bottom a:hover{
+  color: #00c850;
+}
+.header .nav .user_msg_content .user_exit{
+  height: 40px;
+  line-height: 40px;
+  text-align: right;
+}
+.header .nav .user_msg_content .user_exit a{
+  color: #4d555d;
+}
+.header .nav .user_msg_content .user_exit a:hover{
   color: #f00;
 }
 </style>

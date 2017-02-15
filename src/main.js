@@ -12,6 +12,7 @@ import App from './components/App'
 import Header from './components/common/Header'
 import Footer from './components/common/Footer'
 import RightNav from './components/common/RightNav'
+import Conditions from './components/common/Conditions'
 
 import List from './components/course/List'
 
@@ -23,6 +24,7 @@ Vue.use(Resource)
 Vue.component('common-header',Header)
 Vue.component('common-footer',Footer)
 Vue.component('common-rightnav',RightNav)
+Vue.component('imooc-conditions',Conditions)
 
 let router = new Router({
   history: false
