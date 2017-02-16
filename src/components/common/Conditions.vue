@@ -12,22 +12,22 @@
           <a v-on:click.prevent="showMore">更多∨</a>
         </div>
       </div>
-      <div class="condition" v-if="classify_tags.length>0">
+      <div class="condition" v-if="displayClassify.length>0">
         <strong>分类：</strong>
         <div class="items item2">
           <a class="active" @click.stop.prevent="conditionClick($event,2,true)">全部</a>
-          <a v-for="classify in classify_tags" @click.stop.prevent="conditionClick($event,2,false)">{{ classify.name }}
+          <a v-for="classify in displayClassify" @click.stop.prevent="conditionClick($event,2,false)">{{ classify.name }}
           </a>
         </div>
         <div class="more">
           <a v-on:click.prevent="showMore" >更多∨</a>
         </div>
       </div>
-      <div class="condition" v-if="type_tags.length>0">
+      <div class="condition" v-if="displayType.length>0">
         <strong>类型：</strong>
         <div class="items item3">
           <a class="active" @click.stop.prevent="conditionClick($event,3,true)">全部</a>
-          <a v-for="type in type_tags" @click.stop.prevent="conditionClick($event,3,false)">{{ type.name }}
+          <a v-for="type in displayType" @click.stop.prevent="conditionClick($event,3,false)">{{ type.name }}
           </a>
         </div>
         <div class="more">
@@ -63,12 +63,6 @@ export default {
       }
     },
     conditionClick:function(e,type,isAll){
-      if(this.flag){
-        this.directionTags = this.direction_tags;
-        this.classifyTags = this.classify_tags;;
-        this.typeTags = this.type_tags;
-        this.flag = false;
-      }
       $(".condition .item"+type+" a").removeClass("active");
       var target = $(e.currentTarget);
       var str = target.text().trim();
@@ -78,86 +72,127 @@ export default {
       target.addClass("active");
       if(type == 1){
         if(isAll){
-          this.direction_tags = this.directionTags;
-          this.classify_tags = this.classifyTags;
-          this.type_tags = this.typeTags;
-          this.selectedDirections="";
-          $(".condition .item1 a").removeClass("active");
-          $(".condition .item1 a:first").addClass("active");
+          this.selectedDirections={};
         }else{
-          this.selectedDirections=str;
+          this.selectedDirections=_.find(this.direction_tags,["name",str]);
         }
+        this.selectedClassifys={};
+        this.selectedTypes={};
         $(".condition .item2 a").removeClass("active");
         $(".condition .item3 a").removeClass("active");
         $(".condition .item2 a:first").addClass("active");
         $(".condition .item3 a:first").addClass("active");
-        this.selectedClassifys="";
-        this.selectedTypes="";
       }else if(type == 2){
         if(isAll){
-
+          this.selectedClassifys={};
+          $(".condition .item2 a").removeClass("active");
+          $(".condition .item2 a:first").addClass("active");
         }else{
-          this.selectedClassifys=str;
-          this.selectedTypes="";
-          for(var i=0;i<this.classifyTags.length;i++){
-            if(this.classifyTags[i].name === str){
-              var tempDirection = [];
-              var tempClassify = [];
-              var tempDirectionText = this.classifyTags[i].direction;
-              var tempType = [];
-              for(var j=0;j<this.classifyTags.length;j++){
-                if(this.classifyTags[j].direction === tempDirectionText){
-                  tempClassify.push(this.classifyTags[j]);
-                }
-              }
-              this.classify_tags = tempClassify;
-              for(var k=0;k<this.classifyTags[i].type.length;k++){
-                for(var l=0;l<this.typeTags.length;l++){
-                  if(this.classifyTags[i].type[k] === this.typeTags[l].value){
-                    tempType.push(this.typeTags[l]);
-                    break;
-                  }
-                }
-              }
-              this.type_tags = tempType;
-              for(var m=0;m<this.directionTags.length;m++){
-                if(tempDirectionText === this.directionTags[m].value){
-                  this.selectedDirections=this.directionTags[m].name;
-                  break;
-                }
-              }
-              var tempItems = $(".condition .item1 a");
-              tempItems.removeClass("active");
-              for(var n=0;n<tempItems.length;n++){
-                if(tempItems[n].innerText === this.selectedDirections){
-                  $(".condition .item1 a:eq("+n+")").addClass("active");
-                  break;
-                }
-              }
+          this.selectedClassifys=_.find(this.classify_tags,["name",str]);
+          this.selectedDirections = _.find(this.direction_tags,["value",this.selectedClassifys.direction]);
+          var tempItems = $(".condition .item1 a");
+          tempItems.removeClass("active");
+          for(var n=0;n<tempItems.length;n++){
+            if(tempItems[n].innerText === this.selectedDirections.name){
+              $(".condition .item1 a:eq("+n+")").addClass("active");
               break;
             }
           }
         }
-      }else if(type ===3){
-        this.selectedTypes=str;
+      }else if(type === 3){
+        if(isAll){
+          this.selectedTypes={};
+        }else{
+          this.selectedTypes=_.find(this.type_tags,["name",str]);;
+        }
       }
       this.$dispatch("condition-select",{selectedDirections:this.selectedDirections,selectedClassifys:this.selectedClassifys,selectedTypes:this.selectedTypes});
     }
   },
   attached() {
-    this.selectedDirections="";
-    this.selectedClassifys="";
-    this.selectedTypes="";
+    this.selectedDirections={};
+    this.selectedClassifys={};
+    this.selectedTypes={};
+  },
+  computed: {
+    displayClassify: function(){
+      var tempClassify = this.classify_tags;
+      var temp = [];
+      var temp1 = [];
+      var temp2 = [];
+      if(this.selectedDirections.name){
+        for(var i=0;i<tempClassify.length;i++){
+          if(tempClassify[i].direction === this.selectedDirections.value){
+            temp1.push(tempClassify[i]);
+          }
+        }
+      }
+
+      if(this.selectedTypes.name){
+        for(var i=0;i<tempClassify.length;i++){
+          for(var j=0;j<tempClassify[i].type.length;j++){
+            if(tempClassify[i].type[j] === this.selectedTypes.value){
+              temp2.push(tempClassify[i]);
+              break;
+            }
+          }
+        }
+      }
+
+      if(temp1.length === 0){
+        if(temp2.length === 0){
+          temp = tempClassify;
+        }else{
+          temp = temp2;
+        }
+      }else{
+        if(temp2.length === 0){
+          temp = temp1;
+        }else{
+          temp = _.intersection(temp1,temp2);
+        }
+      }
+      return temp;
+    },
+    displayType:function(){
+      var tempClassify = this.classify_tags;
+      var temp = [];
+      var temp1 = [];
+      var temp2 = [];
+      if(this.selectedDirections.name){
+        for(var i=0;i<tempClassify.length;i++){
+          if(tempClassify[i].direction === this.selectedDirections.value){
+            temp1 = temp1.concat(tempClassify[i].type);
+          }
+        }
+        temp1 = _.uniq(temp1);
+      }
+
+      if(this.selectedClassifys.name){
+        temp2 = this.selectedClassifys.type;
+      }
+
+      if(temp1.length === 0){
+        temp = this.type_tags;
+      }else{
+        var t = [];
+        if(temp2.length === 0){
+          t = temp1;
+        }else{
+          t = temp2;
+        }
+        for(var i=0;i<t.length;i++){
+          temp.push(_.find(this.type_tags,["value",t[i]]))
+        }
+      }
+      return temp;
+    }
   },
   data() {
     return {
-      directionTags:[],
-      classifyTags:[],
-      typeTags:[],
-      flag:true,
-      selectedDirections:"",
-      selectedClassifys:"",
-      selectedTypes:""
+      selectedDirections:{},
+      selectedClassifys:{},
+      selectedTypes:{}
     }
   },
   props:['direction_tags','classify_tags','type_tags']

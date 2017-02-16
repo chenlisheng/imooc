@@ -1,15 +1,16 @@
 <template>
-  <common-header id="header"></common-header>
-  <div id="main">
-    <div>
-
+  <div>
+    <common-header id="header"></common-header>
+    <div id="main">
+      <div>
+        <imooc-conditions :direction_tags="direction_tags" :classify_tags="classify_tags" :type_tags="type" @condition-select = "conditionSelect"></imooc-conditions>
+      </div>
+      <div style="width:100px;height:1000px;background:red;"></div>
+      <div></div>
     </div>
-    <imooc-conditions :direction_tags="direction_tags" :classify_tags="classify_tags" :type_tags="type" @condition-select = "conditionSelect"></imooc-conditions>
-    <div style="width:100px;height:1000px;background:red;"></div>
-    <div ></div>
+    <common-rightnav id="rightNav"></common-rightnav>
+    <common-footer id="footer"></common-footer>
   </div>
-  <common-rightnav id="rightNav"></common-rightnav>
-  <common-footer id="footer"></common-footer>
 </template>
 
 
@@ -53,9 +54,9 @@ export default {
       direction_tags:[],
       classify_tags:[],
       type_tags:[],
-      selected_direction_tag:"",
-      selected_classify_tag:"",
-      selected_type_tag:""
+      selected_direction_tag:{},
+      selected_classify_tag:{},
+      selected_type_tag:{}
     }
   }
 }

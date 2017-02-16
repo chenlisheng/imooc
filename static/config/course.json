@@ -135,7 +135,7 @@
     {
       "name":"iOS",
       "value":"ios",
-      "direction":"",
+      "direction":"mobile",
       "type":["1","2","3","4","6"]
     },
     {
