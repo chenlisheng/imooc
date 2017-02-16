@@ -3,12 +3,18 @@
     <table>
       <tbody>
         <tr>
-          <td id="page-pre" disabled v-on:click="prePage" v-bind:class="pageConfig.current_page > 1?'':'disabled'" style="width:50px;">
+          <td disabled v-on:click="firstPage" v-bind:class="pageConfig.current_page > 1?'':'disabled'" style="width:30px;background-color:inherit;margin:0;">
+            <a>首页</a>
+          </td>
+          <td id="page-pre" disabled v-on:click="prePage" v-bind:class="pageConfig.current_page > 1?'':'disabled'" style="width:50px;background-color:inherit;">
             <a>上一页</a>
           </td>
           <td v-for="page in show_page_num"  v-bind:class="{ 'page-active': pageConfig.current_page == page + pageConfig.first_page}" v-on:click="setPage(page)"><a>{{ pageConfig.first_page + page }}</a></td>
-          <td id="page-next" v-on:click="nextPage" v-bind:class="(total_items/pageConfig.page_item_num > 1)&&(pageConfig.current_page < parseInt(total_items/pageConfig.page_item_num)+1)?'':'disabled'" style="width:50px;">
+          <td id="page-next" v-on:click="nextPage" v-bind:class="(total_items/pageConfig.page_item_num > 1)&&(pageConfig.current_page < parseInt(total_items/pageConfig.page_item_num)+1)?'':'disabled'" style="width:50px;background-color:inherit;">
             <a>下一页</a>
+          </td>
+          <td v-on:click="lastPage" v-bind:class="(total_items/pageConfig.page_item_num > 1)&&(pageConfig.current_page < parseInt(total_items/pageConfig.page_item_num)+1)?'':'disabled'" style="width:30px;background-color:inherit;margin:0;">
+            <a>尾页</a>
           </td>
         </tr>
       </tbody>
@@ -18,13 +24,18 @@
 
 <script>
 export default {
-  props:['pageConfig','total_items','type'],
+  props:['pageConfig','total_items'],
   methods: {
+    firstPage: function(event){//首页点击事件
+      this.setPage(0);
+      this.pageConfig.first_page = 1;
+    },
+    lastPage: function(event){//尾页点击事件
+      var allPages = Math.ceil(this.total_items / this.pageConfig.page_item_num);
+      this.setPage(allPages-1);
+      this.pageConfig.first_page = allPages-this.show_page_num+1;
+    },
     nextPage: function (event) {//下一页点击事件
-      if(this.type === 'atlas'){
-        this.$dispatch("getAtlasHttpData",this.show_page_num);
-        return;
-      }
       var allPages = Math.ceil(this.total_items / this.pageConfig.page_item_num);
       if(this.pageConfig.current_page === allPages){
         return;
@@ -64,20 +75,16 @@ export default {
     },
 
     setPage: function (page) {//页码点击事件
-      if(this.type === 'atlas'){
-        this.pageConfig.current_page = page+this.pageConfig.first_page;
-      }else{
-        var activeCards = this.$parent.$el.querySelector('.active');
-        var icons=this.$parent.$el.querySelector('.isOpen');
-        if(activeCards){
-          activeCards.className = activeCards.className.replace(' active','');
-        }//去掉active card
-        if(icons){
-          icons.className = icons.className.replace(' isOpen','');
-          icons.innerText = 'lock_outline';
-        }
-        this.pageConfig.current_page = page+1;
-      }   
+      var activeCards = this.$parent.$el.querySelector('.active');
+      var icons=this.$parent.$el.querySelector('.isOpen');
+      if(activeCards){
+        activeCards.className = activeCards.className.replace(' active','');
+      }//去掉active card
+      if(icons){
+        icons.className = icons.className.replace(' isOpen','');
+        icons.innerText = 'lock_outline';
+      }
+      this.pageConfig.current_page = page+1;
     }
   },
   computed: {
@@ -86,10 +93,7 @@ export default {
       if(this.pageConfig.current_page > cop_page_num&&cop_page_num>0){
         this.pageConfig.current_page = cop_page_num;
       }
-      var num = 5;
-      if(this.type === 'atlas'){
-        num = 10;
-      }
+      var num = 7;
       return cop_page_num > num ? num : cop_page_num;
     }
   },
@@ -109,7 +113,7 @@ export default {
   -moz-user-select: none;     /* Firefox all */  
   -ms-user-select: none;      /* IE 10+ */  
   user-select: none;
-  background-color: white;
+  background-color: #edeff0;
   margin: 0 auto;
   padding: 20px 0;
 }
@@ -137,24 +141,27 @@ export default {
   text-align: center;
   font-size: 14px;
   width:30px;
-  border: 1px solid #c5c5c5;
-  border-radius: 2px;
+  height:30px;
+  border-radius: 50%;
 }
 
 #pagination td:not(.page-active):hover {
-  background-color: #4996ce;
+  background-color: #d9dde1;
 }
 #pagination td:hover a{
-  color: #ffffff;
+  color: #4d555d;
 }
 #pagination td.page-active a{
   color: #ffffff;
 }
 #pagination td.page-active{
-  background-color: #4996ce;
+  background-color: #4d555d;
   border: none;
 }
 #pagination td a {
+  display:block;
+  height:30px;
+  line-height:30px;
   color: #000000;
 }
 

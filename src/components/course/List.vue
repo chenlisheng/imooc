@@ -3,10 +3,12 @@
     <common-header id="header"></common-header>
     <div id="main">
       <div>
-        <imooc-conditions :direction_tags="direction_tags" :classify_tags="classify_tags" :type_tags="type" @condition-select = "conditionSelect"></imooc-conditions>
+        <imooc-conditions :direction_tags="direction" :classify_tags="classify" :type_tags="type" @condition-select = "conditionSelect"></imooc-conditions>
       </div>
       <div style="width:100px;height:1000px;background:red;"></div>
-      <div></div>
+      <div>
+        <imooc-pagination v-show="displayCourses.length>0?true:false" :total_items="total_items" :value="pageConfig" :page-config.sync="pageConfig"></foxgis-imooc>
+      </div>
     </div>
     <common-rightnav id="rightNav"></common-rightnav>
     <common-footer id="footer"></common-footer>
@@ -21,10 +23,6 @@ export default {
       this.selected_direction_tag = data.selectedDirections;
       this.selected_classify_tag = data.selectedClassifys;
       this.selected_type_tag = data.selectedTypes;
-      this.getNewConditions();
-    },
-    getNewConditions:function(){
-
     }
   },
   attached() {
@@ -33,30 +31,44 @@ export default {
       this.classify = response.data.course;
       this.direction = response.data.direction;
       this.type = response.data.type;
-      this.direction_tags = this.direction;
-      this.classify_tags = this.classify;
-      this.type_tags = this.type;
     });
   },
   computed: {
-    displayCourse:function(){
-      var tempCourse = this.classify;
-      for(var i=0;i>tempCourse.length;i++){
-        
+    total_items: function (){
+      var count = this.displayCourses.length;
+      return count;
+    },
+
+    displayCourses: function(){
+      var tempCourses = this.classify;
+      /*if(this.searchFonts.length>0){
+        tempCourses = this.searchFonts;
       }
-    }
+
+      if( this.searchKeyWords.trim().length===0){
+        return tempCourses.slice(0);
+      }
+      if(this.searchFonts.length === 0 && this.searchKeyWords.trim().length!==0){
+      //用户进行了搜索，但结果为空
+        return this.searchFonts;
+      }*/
+
+      return tempCourses;
+    },
   },
   data() {
     return{
       direction:[],
       classify:[],
       type:[],
-      direction_tags:[],
-      classify_tags:[],
-      type_tags:[],
       selected_direction_tag:{},
       selected_classify_tag:{},
-      selected_type_tag:{}
+      selected_type_tag:{},
+      pageConfig: {
+        page_item_num: 2,         //每页显示的条数
+        current_page: 1,          //点击的页面
+        first_page: 1,            //可见页面的起始页
+      }
     }
   }
 }
