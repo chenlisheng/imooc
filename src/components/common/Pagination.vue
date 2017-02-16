@@ -27,13 +27,13 @@ export default {
   props:['pageConfig','total_items'],
   methods: {
     firstPage: function(event){//首页点击事件
-      this.setPage(0);
       this.pageConfig.first_page = 1;
+      this.setPage(0);
     },
     lastPage: function(event){//尾页点击事件
       var allPages = Math.ceil(this.total_items / this.pageConfig.page_item_num);
-      this.setPage(allPages-1);
       this.pageConfig.first_page = allPages-this.show_page_num+1;
+      this.setPage(allPages-1);
     },
     nextPage: function (event) {//下一页点击事件
       var allPages = Math.ceil(this.total_items / this.pageConfig.page_item_num);
@@ -50,7 +50,8 @@ export default {
         icons.className = icons.className.replace(' isOpen','');
         icons.innerText = 'lock_outline';
       }
-      if(this.pageConfig.current_page > this.show_page_num){
+      var mid = Math.ceil(this.show_page_num / 2);
+      if((this.pageConfig.current_page>mid)&&(this.pageConfig.current_page<=(allPages-mid+1))){
         this.pageConfig.first_page +=1;
       }
     },
@@ -69,12 +70,15 @@ export default {
         icons.className = icons.className.replace(' isOpen','');
         icons.innerText = 'lock_outline';
       }
-      if(this.pageConfig.current_page < this.pageConfig.first_page){
+      var mid = Math.ceil(this.show_page_num / 2);
+      var t = this.pageConfig.current_page-this.pageConfig.first_page;
+      if((t<mid-1)&&this.pageConfig.first_page>1){
         this.pageConfig.first_page -=1;
       }
     },
 
     setPage: function (page) {//页码点击事件
+      var allPages = Math.ceil(this.total_items / this.pageConfig.page_item_num);
       var activeCards = this.$parent.$el.querySelector('.active');
       var icons=this.$parent.$el.querySelector('.isOpen');
       if(activeCards){
@@ -84,7 +88,14 @@ export default {
         icons.className = icons.className.replace(' isOpen','');
         icons.innerText = 'lock_outline';
       }
-      this.pageConfig.current_page = page+1;
+      this.pageConfig.current_page = page+this.pageConfig.first_page;
+      var mid = Math.ceil(this.show_page_num / 2);
+      if((page>mid-1)&&(this.pageConfig.first_page+this.show_page_num<=allPages)){
+        this.pageConfig.first_page += (page-mid+1);
+      }
+      if((page<mid-1)&&(this.pageConfig.first_page>1)){
+        this.pageConfig.first_page += (page-mid+1);
+      }
     }
   },
   computed: {
