@@ -1,6 +1,6 @@
 <template>
   <div class="filter">
-    <div style="width: 1080px;">
+    <div style="width: calc(100% - 200px);">
       <div class="condition" v-if="direction_tags.length>0">
         <strong>方向：</strong>
         <div class="items item1">
@@ -273,7 +273,7 @@ export default {
   padding: 10px 0px 10px 63px;
   position: relative;
   zoom: 1;
-  width: 860px;
+  width: 1000px;
   overflow: hidden;
   max-height: 70px;
   display: -webkit-box;

@@ -1,11 +1,35 @@
 <template>
   <div>
     <common-header id="header"></common-header>
-    <div id="main">
+    <div>
       <div>
         <imooc-conditions :direction_tags="direction" :classify_tags="classify" :type_tags="type" @condition-select = "conditionSelect"></imooc-conditions>
       </div>
-      <div style="width:100px;height:1000px;background:red;"></div>
+      <div id="content-wrap">
+        <div class="list-content">
+          <div class="course-top">
+            <div class="left">
+              <a href="javasccript:void(0)" class="active">最新</a>
+              <a href="javasccript:void(0)">最热</a>
+            </div>
+            <div class="right">
+              <a href="javasccript:void(0)">
+                <i class="sw-on-off"></i>
+                <span>隐藏已参加课程</span>
+              </a>
+              <span>1/27<span>
+              <a href="javasccript:void(0)">
+                <i class="material-icons">chevron_left</i>
+              </a>
+              <a href="javasccript:void(0)">
+                <i class="material-icons">chevron_right</i>
+              </a>
+            </div>
+          </div>
+          <div class="course-list">
+          </div>
+        </div>
+      </div>
       <div>
         <imooc-pagination v-show="displayCourses.length>0?true:false" :total_items="total_items" :value="pageConfig" :page-config.sync="pageConfig"></foxgis-imooc>
       </div>
@@ -76,5 +100,37 @@ export default {
 
 
 <style scoped>
-
+#content-wrap{
+  width:100%;
+  padding: 20px 0;
+  background:#edeff0;
+}
+#content-wrap a{
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 14px;
+}
+.list-content {
+  width: 1200px;
+  margin: 0 auto;
+}
+.course-top {
+  width: 100%;
+  height: 20px;
+  padding: 10px 20px;
+  line-height: 20px;
+}
+.course-top .left{
+  float: left;
+}
+.course-top .left a{
+  padding-right: 20px;
+  color: #787d82;
+}
+.course-top .left a.active{
+  color: #f00;
+}
+.course-top .right{
+  float: right;
+}
 </style>
